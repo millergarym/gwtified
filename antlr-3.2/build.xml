@@ -52,7 +52,6 @@
 
 	<target name="extra-source">
 		<untar src="antlr-3.2.tar.gz" dest=".." compression="gzip">
-			<exclude name="**/._*"/>
 	  </untar>
 	</target>
 	
@@ -61,13 +60,23 @@
 	<target name="package" depends="package-runtime,package-gunit,package-tools"/>
 
 	<target name="clean">
+    <delete failonerror="false">
+    	<fileset dir=".." includes="**/._*" defaultexcludes="false"/>
+    </delete>
+    <delete failonerror="false" file="antlrjar.xml"/>
+    <delete failonerror="false" file="antlrsources.xml"/>
+    <delete failonerror="false" file="BUILD.txt"/>
+    <delete failonerror="false" file="pom.xml"/>
+    <delete failonerror="false" file="runtime/Java/antlr.config"/>
+    <delete failonerror="false" file="runtime/Java/doxyfile"/>
+    <delete failonerror="false" file="runtime/Java/pom.xml"/>
 		<delete dir="build" includeemptydirs="true">
 		</delete>
 		<delete dir="dist" includeemptydirs="true">
 		</delete>
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="tool/src/main/antlr2/org/antlr/grammar/v2">
-				<exclude name="**/*.g" />
+				<exclude name="**/*.g"/>
 			</fileset>
 			<fileset dir="gunit/src/main/antlr3/org/antlr/gunit">
 				<exclude name="**/*.g" />
@@ -79,6 +88,12 @@
 				<exclude name="**/*.g" />
 			</fileset>
 		</delete>
+		
+    <delete dir="antlr3-maven-plugin" includeemptydirs="true"/>
+    <delete dir="gunit" includeemptydirs="true"/>
+    <delete dir="gunit-maven-plugin" includeemptydirs="true"/>
+    <delete dir="tool" includeemptydirs="true"/>
+    <delete dir="runtime/Java/src/main/java" includeemptydirs="true"/>		
 	</target>
 	<!-- - - - - - - - - - - - - - - - - - 
           target: depends                      
