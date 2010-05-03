@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     AntLR    
+     ====================================================================== -->
+<project name="antlr" default="default">
+	<description>
+        Builds and packages distributable jar.
+        Including a GWT compatable jar
+    </description>
+
+	<property name="project.version" value="3.2-gwt"/>
+	<property name="buildNumber" value="unofficial"/>
+	<property environment="env"/>
+
+	<taskdef name="antlr3" 
+		classname="org.apache.tools.ant.antlr.ANTLR3" 
+		classpath="lib/antlr3.jar" />
+
+	<macrodef name="antlr.v2">
+		<attribute name="target" default="${project.lib}" />
+		<sequential>
+			<antlr target="@{target}">
+				<classpath>
+					<pathelement location="lib/antlr-2.7.7.jar" />
+					<path path="tool/src/main/resources" />
+				</classpath>
+			</antlr>
+		</sequential>
+	</macrodef>
+
+
+	<macrodef name="antlr.v3">
+		<attribute name="target" default="${project.lib}" />
+		<attribute name="outputdirectory" default="tool/src/main/antlr3/org/antlr/grammar/v3" />
+		<attribute name="dir" default="tool/src/main/antlr3" />
+		<sequential>
+			<antlr3 target="@{target}" dir="@{dir}" outputdirectory="@{outputdirectory}">
+				<classpath>
+					<pathelement location="lib/antlr-3.2.jar" />
+					<path path="tool/src/main/resources" />
+				</classpath>
+			</antlr3>
+		</sequential>
+	</macrodef>
+
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="extra-source, antlr, javac, package" description="description">
+	</target>
+
+	<target name="extra-source">
+		<untar src="antlr-3.2.tar.gz" dest=".." compression="gzip">
+			<exclude name="**/._*"/>
+	  </untar>
+	</target>
+	
+	<target name="test" depends="test-tools, test-gunit"/>
+
+	<target name="package" depends="package-runtime,package-gunit,package-tools"/>
+
+	<target name="clean">
+		<delete dir="build" includeemptydirs="true">
+		</delete>
+		<delete dir="dist" includeemptydirs="true">
+		</delete>
+		<delete>
+			<fileset dir="tool/src/main/antlr2/org/antlr/grammar/v2">
+				<exclude name="**/*.g" />
+			</fileset>
+			<fileset dir="gunit/src/main/antlr3/org/antlr/gunit">
+				<exclude name="**/*.g" />
+			</fileset>
+			<fileset dir="tool/src/main/antlr3/org/antlr/grammar/v3">
+				<exclude name="**/*.g" />
+			</fileset>
+			<fileset dir="gunit/src/main/antlr3/org/antlr/gunit/swingui/parsers">
+				<exclude name="**/*.g" />
+			</fileset>
+		</delete>
+	</target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: depends                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="antlr">
+		<antlr.v2 target="tool/src/main/antlr2/org/antlr/grammar/v2/antlr.g" />
+		<antlr.v2 target="tool/src/main/antlr2/org/antlr/grammar/v2/antlr.print.g" />
+		<antlr.v2 target="tool/src/main/antlr2/org/antlr/grammar/v2/assign.types.g" />
+		<antlr.v2 target="tool/src/main/antlr2/org/antlr/grammar/v2/buildnfa.g" />
+		<antlr.v2 target="tool/src/main/antlr2/org/antlr/grammar/v2/codegen.g" />
+		<antlr.v2 target="tool/src/main/antlr2/org/antlr/grammar/v2/define.g" />
+		<!--
+Copy ANTLRToken..txt to same directory as serialize.g else does seem to work
+Having said that the class produced by serialize.g does compile as GrammarSerializer has been renamed GrammrSerializerFoo 
+		<cop
+		<antlr target="tool/src/main/java/org/antlr/tool/serialize.g">
+			<classpath>
+				<pathelement location="lib/antlr-3.2.jar" />
+				<path path="tool/src/main/resources" />
+			</classpath>
+		</antlr>
+-->
+
+		<antlr.v3 target="gunit/src/main/antlr3/org/antlr/gunit/gUnit.g" dir="gunit/src/main/antlr3" outputdirectory="gunit/src/main/antlr3/org/antlr/gunit" />
+		<antlr.v3 target="gunit/src/main/antlr3/org/antlr/gunit/swingui/parsers/ANTLRv3.g" dir="gunit/src/main/antlr3" outputdirectory="gunit/src/main/antlr3/org/antlr/gunit/swingui/parsers" />
+		<antlr.v3 target="gunit/src/main/antlr3/org/antlr/gunit/swingui/parsers/StGUnit.g" dir="gunit/src/main/antlr3" outputdirectory="gunit/src/main/antlr3/org/antlr/gunit/swingui/parsers" />
+
+		<antlr.v3 target="tool/src/main/antlr3/org/antlr/grammar/v3/ANTLRv3.g" />
+		<antlr.v3 target="tool/src/main/antlr3/org/antlr/grammar/v3/ANTLRv3Tree.g" />
+		<antlr.v3 target="tool/src/main/antlr3/org/antlr/grammar/v3/ActionAnalysis.g" />
+		<antlr.v3 target="tool/src/main/antlr3/org/antlr/grammar/v3/ActionTranslator.g" />
+	</target>
+
+	<target name="javac" 
+		depends="javac-runtime,javac-gunit,javac-gunit-test,javac-tools,javac-tools-test"
+	/>
+
+	<target name="javac-runtime">
+		<mkdir dir="build/runtime-classes" />
+		<javac debug="true" destdir="build/runtime-classes" listfiles="yes" deprecation="Yes">
+			<src path="runtime/Java/src/main/java" />
+			<compilerarg value="-Xlint:unchecked" />
+			<classpath>
+				<pathelement location="lib/stringtemplate-3.2.1.jar" />
+			</classpath>
+		</javac>
+	</target>
+	<target name="package-runtime">
+		<mkdir dir="dist"/>
+		<jar destfile="dist/antlr-runtime.jar">
+			<fileset dir="build/runtime-classes" id="runtime-classes">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+		<jar destfile="dist/antlr-gwt-runtime.jar">
+			<fileset refid="runtime-classes">
+			</fileset>
+			<fileset dir="runtime/Java/src/main/java" id="runtime-src">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="runtime/Java/src/main/gwt" id="runtime-gwt-src">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+
+
+	<target name="javac-gunit">
+		<mkdir dir="build/gunit-classes" />
+		<javac debug="true" destdir="build/gunit-classes" listfiles="yes" deprecation="Yes">
+			<src path="gunit/src/main/antlr3" />
+			<src path="gunit/src/main/java" />
+			<compilerarg value="-Xlint:unchecked" />
+			<classpath>
+				<pathelement location="build/runtime-classes" />
+				<pathelement location="lib/stringtemplate-3.2.1.jar" />
+				<pathelement location="lib/junit-4.6.jar" />
+			</classpath>
+		</javac>
+	</target>
+	<target name="package-gunit">
+		<mkdir dir="dist"/>
+		<jar destfile="dist/antlr-gunit.jar">
+			<fileset dir="build/gunit-classes" id="gunit-classes">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="javac-gunit-test">
+		<mkdir dir="build/gunit-test" />
+		<javac debug="true" destdir="build/gunit-test" listfiles="yes" deprecation="Yes">
+			<src path="gunit/src/test/java" />
+			<compilerarg value="-Xlint:unchecked" />
+			<classpath>
+				<pathelement location="build/runtime-classes" />
+				<pathelement location="build/gunit-classes" />
+				<pathelement location="lib/stringtemplate-3.2.1.jar" />
+				<pathelement location="lib/junit-4.6.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="javac-tools">
+		<mkdir dir="build/tools-classes" />
+		<javac debug="true" destdir="build/tools-classes" listfiles="yes" deprecation="Yes">
+			<src path="tool/src/main/antlr2" />
+			<src path="tool/src/main/antlr3" />
+			<src path="tool/src/main/java" />
+			<compilerarg value="-Xlint:unchecked" />
+			<classpath>
+				<pathelement location="build/runtime-classes" />
+				<pathelement location="lib/stringtemplate-3.2.1.jar" />
+				<pathelement location="lib/antlr-2.7.7.jar" />
+			</classpath>
+		</javac>
+	</target>
+	<target name="package-tools">
+		<mkdir dir="dist"/>
+		<manifest file="dist/tools-manifest.mf">
+		    <attribute name="Built-By" value="garym"/>
+		    <attribute name="Main-Class" value="org.antlr.Tool"/>
+			<!--
+			<attribute name="Class-Path" value="${tools-jar.classpath}"/>
+		    -->
+	    </manifest>
+		
+		<copy todir="build/tools-classes">
+			<fileset dir="tool/src/main/resources">				
+				<include name="org/antlr/antlr.properties"/>			
+			</fileset>
+			<filterset begintoken="$${" endtoken="}">
+				<filter token="project.version" value="${project.version}"/>
+				<filter token="buildNumber" value="${buildNumber}"/>	
+			</filterset>
+		</copy>
+		<jar destfile="dist/antlr-tools.jar" manifest="dist/tools-manifest.mf">
+			<fileset dir="build/tools-classes" id="tools-classes">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="tool/src/main/resources" id="tools-resources">				
+				<include name="**/*"/>
+				<exclude name="org/antlr/antlr.properties"/>
+			</fileset>
+            <zipfileset src="lib/stringtemplate-3.2.1.jar">
+            </zipfileset>
+            <zipfileset src="lib/antlr-2.7.7.jar">
+            </zipfileset>
+            <zipfileset src="dist/antlr-runtime.jar">
+            </zipfileset>
+		</jar>
+	</target>
+
+	<target name="javac-tools-test">
+		<mkdir dir="build/test" />
+		<javac debug="true" destdir="build/test" listfiles="yes" deprecation="Yes">
+			<src path="tool/src/test/java" />
+			<compilerarg value="-Xlint:unchecked" />
+			<classpath>
+				<pathelement location="build/runtime-classes" />
+				<pathelement location="build/tools-classes" />
+				<pathelement location="lib/stringtemplate-3.2.1.jar" />
+				<pathelement location="lib/antlr-2.7.7.jar" />
+				<pathelement location="lib/junit-4.6.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test-gunit">
+		<mkdir dir="build/gunit-test-reports" />
+		<junit fork="true" dir="." printsummary="yes" haltonfailure="no">
+			<classpath>
+				<pathelement location="build/runtime-classes" />
+				<pathelement location="build/gunit-classes" />
+				<pathelement location="build/gunit-test" />
+				<pathelement location="lib/stringtemplate-3.2.1.jar" />
+				<pathelement location="lib/junit-4.6.jar" />
+			</classpath>
+			<jvmarg value="-Xmx512M" />
+			<jvmarg value="-ea" />
+			<formatter type="xml" />
+			<batchtest todir="build/gunit-test-reports">
+				<fileset dir="gunit/src/test/java">
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="test-tools">
+		<!-- Sanity check -->
+		<available 
+			file="${env.JAVA_HOME}/bin/javac" 
+			type="file" property="javac.exists" />
+		<available 
+			file="${env.JAVA_HOME}/bin/javac.exe" 
+			type="file" property="javac.exe.exists" />
+		<condition property="javac.found">
+			<or>
+				<isset property="javac.exists"/>
+				<isset property="javac.exe.exists"/>
+			</or>
+		</condition>
+		<fail unless="javac.found" 
+			message="Cannot find javac. Check that JAVA_HOME is set and JAVA_HOME/bin/javac exists" />
+
+		<mkdir dir="build/test-reports" />
+		<junit fork="true" dir="." printsummary="yes" haltonfailure="no">
+			<classpath>
+				<pathelement location="tool/src/main/resources" />
+				<pathelement location="build/test" />
+				<pathelement location="build/runtime-classes" />
+				<pathelement location="build/tools-classes" />
+				<pathelement location="lib/stringtemplate-3.2.1.jar" />
+				<pathelement location="lib/antlr-2.7.7.jar" />
+				<pathelement location="lib/junit-4.6.jar" />
+			</classpath>
+			<env key="PATH" path="${env.JAVA_HOME}/bin" />
+			<jvmarg value="-Xmx512M" />
+			<jvmarg value="-ea" />
+			<formatter type="xml" />
+			<batchtest todir="build/test-reports">
+				<fileset dir="tool/src/test/java">
+					<exclude name="**/BaseTest*" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+</project>
