@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.important {
+			font-weight: bold;
+		}
+	</ui:style>
+	<g:HTMLPanel>
+		Hello,
+		<g:TextArea ui:field="inputTA"/>
+		<g:Button styleName="{style.important}" ui:field="simplifyBT" text="Simplify"/>
+    <g:Button styleName="{style.important}" ui:field="reduceBT" text="Reduce"/>
+    <g:TextArea ui:field="simplifyTA"/>
+    <g:TextArea ui:field="reduceTA"/>
+	</g:HTMLPanel>
+</ui:UiBinder> 

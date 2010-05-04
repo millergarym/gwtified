@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" output="classes/junit" path="test/junit"/>
+	<classpathentry kind="src" path="src/antlr"/>
+	<classpathentry kind="src" output="classes/gwt" path="test/gwt"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/api"/>
+	<classpathentry kind="lib" path="C:/dev/workspace/gwtified/antlr-3.2/export/antlr-gwt-runtime.jar"/>
+	<classpathentry kind="lib" path="C:/dev/workspace/gwtified/antlr-3.2/export/gwtx.jar"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>
