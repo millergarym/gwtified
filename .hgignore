@@ -1,0 +1,26 @@
+
+syntax: regexp
+\._.*
+^antlr-3\.2/antlrsources.xml$
+^antlr-3\.2/BUILD.txt$
+^antlr-3.2-example/build.xml$
+^antlr-3\.2/antlrjar.xml$
+^antlr-3.2-example/project.ant.xml$
+\.swp$
+pom\.xml
+doxyfile$
+^antlr-3\.2-example/.settings$
+^antlr-3\.2/dist$
+^antlr-3\.2/build$
+^antlr-3\.2/gunit$
+^antlr-3\.2/antlr3-maven-plugin$
+^antlr-3\.2/gunit-maven-plugin$
+^antlr-3\.2/runtime/Java/src/main/java$
+^antlr-3\.2/runtime/Java/antlr.config$
+^antlr-3\.2/tool$
+^antlr-3\.2-example/war/antexample$
+^antlr-3\.2-example/war/WEB-INF/classes$
+^antlr-3\.2-example/src/antlr/com/google/code/gwtified/antlr_32_example/client/.*\.java$
+^antlr-3\.2-example/src/antlr/com/google/code/gwtified/antlr_32_example/client/.*\.tokens$
+.empty
+^antlr-3\.2-example/war/WEB-INF/lib/gwt-servlet\.jar$
