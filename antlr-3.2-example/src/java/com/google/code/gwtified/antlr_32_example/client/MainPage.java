@@ -118,15 +118,11 @@ public class MainPage extends Composite {
       t = (CommonTree) r.getTree(); // get tree result
       System.out.println("Original tree: " + t.toStringTree());
 
-      CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);
-      Simplify s = new Simplify(nodes);
-      t = (CommonTree) s.downup(t);
-      System.out.println("Simplified tree: " + t.toStringTree());
-
       CommonTreeNodeStream nodesRed = new CommonTreeNodeStream(t);
       Reduce red = new Reduce(nodesRed);
       t = (CommonTree)red.downup(t);
       reduceTA.setText( t.toStringTree() );
+      System.out.println("Simplified tree: " + t.toStringTree());
       
     } catch (RecognitionException e1) {
       Window.alert( "RecognitionException " + e1.getMessage() );

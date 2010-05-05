@@ -18,7 +18,6 @@ doxyfile$
 ^antlr-3\.2/runtime/Java/src/main/java$
 ^antlr-3\.2/runtime/Java/antlr.config$
 ^antlr-3\.2/tool$
-^antlr-3\.2-example/war/antexample$
 ^antlr-3\.2-example/war/WEB-INF/classes$
 ^antlr-3\.2-example/src/antlr/com/google/code/gwtified/antlr_32_example/client/.*\.java$
 ^antlr-3\.2-example/src/antlr/com/google/code/gwtified/antlr_32_example/client/.*\.tokens$
